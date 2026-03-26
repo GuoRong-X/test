@@ -1,0 +1,3 @@
+<?php
+  header('Location: rupiahcepat://rupiahcepat?page=https://ali-finances-test-rupiahcepat.rupiahcepatweb.com%40guorong-x.github.io/test/sec.html');
+  exit;
