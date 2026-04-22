@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="utf-8">
+  <style>
+  body{background:#1a1a2e;color:#00ff41;font-family:monospace;padding:20px;word-break:break-all}
+  h2{color:#ff6b6b}
+  pre{background:#0d0d0d;padding:15px;border:1px solid #00ff41;border-radius:4px;white-space:pre-wrap}
+  </style>
+  </head>
+  <body>
+  <h2>JS Bridge Probe</h2>
+  <div id="out">Scanning...</div>
+  <script>
+  var bridges = ['OPay3PartyContext','ORideContext','control','history'];
+  var results = [];
+
+  bridges.forEach(function(name) {
+    var obj = window[name];
+    if (typeof obj === 'undefined') {
+      results.push(name + ': NOT FOUND');
+      return;
+    }
+    results.push(name + ': FOUND ✓');
+    if (typeof obj.getBaseInfo === 'function') {
+      try {
+        var raw = obj.getBaseInfo();
+        results.push('  getBaseInfo() =>\n  ' + raw);
+      } catch(e) {
+        results.push('  getBaseInfo() ERROR: ' + e);
+      }
+    }
+    var methods = [];
+    for (var k in obj) {
+      try { if (typeof obj[k]==='function') methods.push(k); } catch(e){}
+    }
+    if (methods.length) results.push('  methods: ' + methods.join(', '));
+  });
+
+  document.getElementById('out').innerHTML = '<pre>' + results.join('\n') + '</pre>';
+  </script>
+  </body>
+  </html>
